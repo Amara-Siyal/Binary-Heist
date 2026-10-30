@@ -1,0 +1,503 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>BINARY HEIST: CASE 0101 - TERMINAL BOOT</title>
+<!-- Google Fonts & Material Symbols -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&amp;family=Space+Grotesk:wght@600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS with custom theme config -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-bright": "#353940",
+            "surface-variant": "#31353c",
+            "on-background": "#dfe2eb",
+            "on-secondary-fixed": "#001f24",
+            "surface-dim": "#10141a",
+            "outline": "#85967c",
+            "on-tertiary": "#432c00",
+            "surface-container-high": "#262a31",
+            "surface-container-lowest": "#0a0e14",
+            "primary-fixed": "#79ff5b",
+            "error": "#ffb4ab",
+            "on-primary": "#053900",
+            "surface": "#10141a",
+            "surface-container": "#1c2026",
+            "on-tertiary-container": "#835900",
+            "secondary-fixed-dim": "#00daf3",
+            "inverse-surface": "#dfe2eb",
+            "primary-fixed-dim": "#2ae500",
+            "primary-container": "#39ff14",
+            "tertiary-fixed": "#ffddaf",
+            "secondary": "#bdf4ff",
+            "on-secondary": "#00363d",
+            "tertiary": "#fff8f4",
+            "on-error-container": "#ffdad6",
+            "inverse-primary": "#106e00",
+            "background": "#10141a",
+            "on-surface": "#dfe2eb",
+            "secondary-fixed": "#9cf0ff",
+            "tertiary-fixed-dim": "#ffba43",
+            "inverse-on-surface": "#2d3137",
+            "on-surface-variant": "#baccb0",
+            "on-tertiary-fixed-variant": "#614000",
+            "primary": "#efffe3",
+            "error-container": "#93000a",
+            "surface-container-highest": "#31353c",
+            "secondary-container": "#00e3fd",
+            "on-secondary-container": "#00616d",
+            "on-tertiary-fixed": "#281800",
+            "on-primary-fixed-variant": "#095300",
+            "on-primary-fixed": "#022100",
+            "surface-container-low": "#181c22",
+            "on-primary-container": "#107100",
+            "outline-variant": "#3c4b35",
+            "on-secondary-fixed-variant": "#004f58",
+            "surface-tint": "#2ae500",
+            "on-error": "#690005",
+            "tertiary-container": "#ffd79e"
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          spacing: {
+            "margin-tablet": "1.5rem",
+            "margin-desktop": "2.5rem",
+            "margin": "1rem",
+            "space-sm": "0.5rem",
+            "space-md": "1rem",
+            "gutter": "1rem",
+            "space-lg": "1.5rem",
+            "gutter-tablet": "1.25rem",
+            "space-xs": "0.25rem",
+            "space-xl": "2.5rem",
+            "gutter-desktop": "1.5rem"
+          },
+          fontFamily: {
+            "body-md": ["JetBrains Mono"],
+            "headline-sm": ["Space Grotesk"],
+            "headline-lg": ["Space Grotesk"],
+            "label-md": ["JetBrains Mono"],
+            "label-lg": ["JetBrains Mono"],
+            "headline-md": ["Space Grotesk"],
+            "body-sm": ["JetBrains Mono"],
+            "body-lg": ["JetBrains Mono"],
+            "headline-xl-mobile": ["Space Grotesk"],
+            "headline-xl": ["Space Grotesk"],
+            "label-sm": ["JetBrains Mono"],
+            "headline-lg-mobile": ["Space Grotesk"]
+          },
+          fontSize: {
+            "body-md": ["14px", { lineHeight: "20px", letterSpacing: "0.01em", fontWeight: "400" }],
+            "headline-sm": ["16px", { lineHeight: "22px", letterSpacing: "0.08em", fontWeight: "600" }],
+            "headline-lg": ["32px", { lineHeight: "38px", letterSpacing: "0.1em", fontWeight: "700" }],
+            "label-md": ["12px", { lineHeight: "16px", letterSpacing: "0.12em", fontWeight: "500" }],
+            "label-lg": ["14px", { lineHeight: "18px", letterSpacing: "0.14em", fontWeight: "600" }],
+            "headline-md": ["22px", { lineHeight: "28px", letterSpacing: "0.08em", fontWeight: "600" }],
+            "body-sm": ["12px", { lineHeight: "16px", letterSpacing: "0.02em", fontWeight: "400" }],
+            "body-lg": ["16px", { lineHeight: "24px", letterSpacing: "0.02em", fontWeight: "400" }],
+            "headline-xl-mobile": ["32px", { lineHeight: "36px", letterSpacing: "0.08em", fontWeight: "700" }],
+            "headline-xl": ["48px", { lineHeight: "52px", letterSpacing: "0.12em", fontWeight: "700" }],
+            "label-sm": ["10px", { lineHeight: "12px", letterSpacing: "0.16em", fontWeight: "600" }],
+            "headline-lg-mobile": ["24px", { lineHeight: "28px", letterSpacing: "0.06em", fontWeight: "700" }]
+          }
+        }
+      }
+    };
+  </script>
+<style>
+    /* Phosphor bloom & CRT effects */
+    .crt-scanlines {
+      background: linear-gradient(rgba(18, 24, 32, 0) 50%, rgba(0, 0, 0, 0.45) 50%);
+      background-size: 100% 3px;
+    }
+    .neon-green-glow {
+      text-shadow: 0 0 8px rgba(57, 255, 20, 0.65), 0 0 16px rgba(57, 255, 20, 0.35);
+    }
+    .neon-cyan-glow {
+      text-shadow: 0 0 8px rgba(0, 229, 255, 0.65), 0 0 18px rgba(0, 229, 255, 0.3);
+    }
+    .box-glow-green {
+      box-shadow: 0 0 12px rgba(57, 255, 20, 0.25), inset 0 0 8px rgba(57, 255, 20, 0.1);
+    }
+    .box-glow-cyan {
+      box-shadow: 0 0 12px rgba(0, 229, 255, 0.25), inset 0 0 8px rgba(0, 229, 255, 0.1);
+    }
+    .glitch-stack {
+      position: relative;
+    }
+    .glitch-stack::before,
+    .glitch-stack::after {
+      content: attr(data-text);
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+    .glitch-stack::before {
+      left: 2px;
+      text-shadow: -2px 0 #00e3fd;
+      clip: rect(24px, 550px, 90px, 0);
+      animation: glitch-anim-1 2.5s infinite linear alternate-reverse;
+    }
+    .glitch-stack::after {
+      left: -2px;
+      text-shadow: -2px 0 #ff2e4c;
+      clip: rect(85px, 550px, 140px, 0);
+      animation: glitch-anim-2 3s infinite linear alternate-reverse;
+    }
+    @keyframes glitch-anim-1 {
+      0% { clip: rect(10px, 9999px, 44px, 0); }
+      20% { clip: rect(60px, 9999px, 80px, 0); }
+      40% { clip: rect(20px, 9999px, 60px, 0); }
+      60% { clip: rect(75px, 9999px, 110px, 0); }
+      80% { clip: rect(35px, 9999px, 50px, 0); }
+      100% { clip: rect(90px, 9999px, 130px, 0); }
+    }
+    @keyframes glitch-anim-2 {
+      0% { clip: rect(50px, 9999px, 75px, 0); }
+      25% { clip: rect(15px, 9999px, 35px, 0); }
+      50% { clip: rect(85px, 9999px, 120px, 0); }
+      75% { clip: rect(30px, 9999px, 65px, 0); }
+      100% { clip: rect(10px, 9999px, 40px, 0); }
+    }
+    @keyframes blink {
+      0%, 49% { opacity: 1; }
+      50%, 100% { opacity: 0; }
+    }
+    .cursor-blink {
+      animation: blink 0.9s infinite;
+    }
+    .chamfer-card {
+      clip-path: polygon(
+        0 10px, 10px 0, 
+        calc(100% - 10px) 0, 100% 10px, 
+        100% calc(100% - 10px), calc(100% - 10px) 100%, 
+        10px 100%, 0 calc(100% - 10px)
+      );
+    }
+    .hud-bracket-tl {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 14px;
+      height: 14px;
+      border-top: 2px solid #39ff14;
+      border-left: 2px solid #39ff14;
+    }
+    .hud-bracket-tr {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 14px;
+      height: 14px;
+      border-top: 2px solid #39ff14;
+      border-right: 2px solid #39ff14;
+    }
+    .hud-bracket-bl {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 14px;
+      height: 14px;
+      border-bottom: 2px solid #39ff14;
+      border-left: 2px solid #39ff14;
+    }
+    .hud-bracket-br {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 14px;
+      height: 14px;
+      border-bottom: 2px solid #39ff14;
+      border-right: 2px solid #39ff14;
+    }
+    @keyframes pulse-ring {
+      0% { transform: scale(0.9); opacity: 0.8; }
+      50% { transform: scale(1.3); opacity: 0.2; }
+      100% { transform: scale(0.9); opacity: 0.8; }
+    }
+    .nfc-pulse {
+      animation: pulse-ring 2.2s infinite ease-in-out;
+    }
+  </style>
+</head>
+<body class="bg-surface-container-lowest text-on-surface font-body-md antialiased min-h-screen relative flex flex-col justify-between overflow-x-hidden select-none">
+<!-- Background Layer 1: Digital Rain Canvas -->
+<canvas class="fixed inset-0 w-full h-full pointer-events-none opacity-25 z-0" id="matrixCanvas"></canvas>
+<!-- Background Layer 2: CRT Scanline and Vignette Overlay -->
+<div class="fixed inset-0 w-full h-full pointer-events-none crt-scanlines z-10"></div>
+<div class="fixed inset-0 w-full h-full pointer-events-none bg-[radial-gradient(ellipse_at_center,transparent_45%,rgba(10,14,20,0.88)_100%)] z-10"></div>
+<!-- Background Layer 3: Noir City Skyline Horizon Silhouette -->
+<div class="fixed bottom-0 inset-x-0 h-44 pointer-events-none z-0 opacity-20 flex items-end justify-between px-2 overflow-hidden">
+<div class="w-12 h-36 bg-surface-container-high border-t border-outline-variant"></div>
+<div class="w-8 h-24 bg-surface-container border-t border-outline-variant"></div>
+<div class="w-20 h-40 bg-surface-container-highest border-t border-outline-variant relative">
+<span class="absolute top-1 left-2 w-1 h-1 bg-secondary-container opacity-80"></span>
+<span class="absolute top-6 right-3 w-1 h-1 bg-primary-container opacity-90"></span>
+</div>
+<div class="w-16 h-28 bg-surface-container border-t border-outline-variant"></div>
+<div class="w-24 h-48 bg-surface-container-high border-t border-outline-variant"></div>
+<div class="w-10 h-32 bg-surface-container-highest border-t border-outline-variant"></div>
+<div class="w-14 h-20 bg-surface-container border-t border-outline-variant"></div>
+<div class="w-32 h-44 bg-surface-container-high border-t border-outline-variant"></div>
+<div class="w-8 h-16 bg-surface-container border-t border-outline-variant"></div>
+<div class="w-20 h-36 bg-surface-container-highest border-t border-outline-variant"></div>
+</div>
+<!-- TOP SHELL: TopAppBar Component (from Shared Components JSON) -->
+<header class="relative z-30 w-full">
+<nav class="flex justify-between items-center w-full px-4 py-2 border-b border-outline-variant bg-surface-container-lowest">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-container" data-icon="terminal">terminal</span>
+<span class="text-headline-sm font-headline-sm tracking-widest text-primary-container uppercase">
+          BINARY HEIST: CASE 0101
+        </span>
+</div>
+<div class="flex items-center gap-3">
+<span class="inline-block w-2 h-2 rounded-full bg-primary-container animate-pulse"></span>
+<span class="text-label-sm font-label-sm text-on-surface-variant font-bold border border-outline-variant px-2 py-0.5 bg-surface-container-low">
+          STAGE 01/05
+        </span>
+</div>
+</nav>
+</header>
+<!-- MAIN VIEWPORT CONTAINER -->
+<main class="relative z-20 flex-1 flex flex-col justify-between max-w-6xl w-full mx-auto px-4 sm:px-6 py-4">
+<!-- Top Area: Terminal Boot Sequence Log Banner -->
+<section class="w-full bg-surface-container-low/90 border border-outline-variant p-3 chamfer-card relative backdrop-blur-sm">
+<div class="hud-bracket-tl"></div>
+<div class="hud-bracket-tr"></div>
+<div class="hud-bracket-bl"></div>
+<div class="hud-bracket-br"></div>
+<div class="flex flex-col sm:flex-row sm:items-center justify-between pb-2 mb-2 border-b border-outline-variant text-label-sm font-label-sm text-on-surface-variant">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary-container shadow-[0_0_8px_#39ff14]"></span>
+<span class="w-2 h-2 rounded-full bg-secondary-container shadow-[0_0_8px_#00e3fd]"></span>
+<span class="w-2 h-2 rounded-full bg-outline-variant"></span>
+<span class="text-primary-container font-bold tracking-wider">[HUD PROTOCOL ACTIVE]</span>
+</div>
+<div class="flex items-center gap-3 mt-1 sm:mt-0 font-body-sm text-body-sm text-secondary-container">
+<span>PORT: 8089/TCP</span>
+<span>LATENCY: 12ms</span>
+<span class="text-primary-container font-mono" id="terminalClock">1988-11-04 03:42:19 UTC</span>
+</div>
+</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant space-y-0.5 leading-relaxed tracking-wider">
+<p class="text-on-surface-variant">&gt; BIOS_VER 4.09.2a INITIALIZING SECURE CONNECTION...</p>
+<p class="text-on-surface-variant">&gt; HARDWARE BUS: <span class="text-secondary-container">LOCKED</span></p>
+<p class="text-on-surface-variant">&gt; PROTOCOL: <span class="text-secondary">QUANTUM_HEX</span></p>
+<p class="text-primary-container font-bold neon-green-glow">&gt; ACCESS GRANTED [SEC_LEVEL: 4]</p>
+</div>
+</section>
+<!-- Center Stage: Glitch Brand & Investigation Target Dossier -->
+<section class="my-6 text-center flex flex-col items-center justify-center relative">
+<!-- System Node Header -->
+<div class="inline-flex items-center gap-2 px-3 py-1 bg-surface-container border border-outline-variant text-label-md font-label-md text-secondary tracking-widest uppercase mb-4 box-glow-cyan">
+<span class="material-symbols-outlined text-secondary-container" data-icon="memory">memory</span>
+<span>TERMINAL NODE // TOKYO-03 VAULT INTERCEPT</span>
+</div>
+<!-- Cyberpunk Title with Chromatic Glitch -->
+<div class="relative py-2">
+<h1 class="glitch-stack font-headline-xl text-headline-xl sm:text-[68px] sm:leading-[72px] tracking-widest text-primary-container uppercase font-extrabold neon-green-glow" data-text="BINARY HEIST">
+          BINARY HEIST
+        </h1>
+</div>
+<!-- Case 0101 Badge + Redaction Classified Tag -->
+<div class="flex items-center flex-wrap justify-center gap-3 mt-2">
+<div class="flex items-center gap-2 border border-outline-variant bg-surface-container-high px-3 py-1">
+<span class="text-label-lg font-label-lg text-primary tracking-widest">CASE 0101</span>
+<span class="w-1.5 h-1.5 rounded-full bg-secondary-container"></span>
+<span class="text-label-sm font-label-sm text-on-surface-variant">MAINFRAME BREACH</span>
+</div>
+<div class="flex items-center gap-1.5 border border-error-container bg-error-container/20 text-error px-2.5 py-1 text-label-sm font-label-sm tracking-widest uppercase">
+<span class="w-2 h-2 rounded-full bg-error animate-ping"></span>
+<span>CONFIDENTIAL // RESTRICTED</span>
+</div>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant max-w-lg mt-3 text-center opacity-80">
+        Direct acoustic tap into underground crypto-vault fiber arrays. Neural authentication signature required for handshake initialization.
+      </p>
+</section>
+<!-- Interactive Auth Form / Input Area -->
+<section class="w-full max-w-xl mx-auto bg-surface-container/95 border border-outline-variant p-6 relative box-glow-green chamfer-card backdrop-blur-md">
+<!-- Decorative Mechanical Markers -->
+<div class="hud-bracket-tl"></div>
+<div class="hud-bracket-tr"></div>
+<div class="hud-bracket-bl"></div>
+<div class="hud-bracket-br"></div>
+<div class="flex items-center justify-between border-b border-outline-variant pb-2 mb-4">
+<label class="text-label-md font-label-md text-primary-container tracking-wider flex items-center gap-1" for="agentIdInput">
+<span class="material-symbols-outlined text-primary-container" data-icon="lock_open">lock_open</span>
+          ENTER AGENT ID
+        </label>
+<span class="text-label-sm font-label-sm text-secondary-container bg-secondary-container/10 border border-secondary-container/30 px-2 py-0.5">
+          CLEARANCE: LEVEL 4 REQUIRED
+        </span>
+</div>
+<!-- Terminal Input Display Field -->
+<div class="relative bg-surface-container-lowest border border-primary-container/80 p-3 flex items-center shadow-[inset_0_0_10px_rgba(57,255,20,0.15)] group">
+<span class="text-primary-container font-headline-md text-headline-md select-none mr-2">&gt;</span>
+<input class="bg-transparent text-primary font-body-lg text-body-lg w-full focus:outline-none tracking-widest uppercase font-semibold border-none p-0 focus:ring-0" id="agentIdInput" spellcheck="false" type="text" value="AGENT_7709_">
+<span class="text-primary-container text-headline-md font-headline-md cursor-blink select-none">▋</span>
+</div>
+<!-- Physical DIP Switch Bank Metaphor -->
+<div class="mt-4 pt-3 border-t border-outline-variant/60 flex items-center justify-between text-label-sm font-label-sm text-on-surface-variant">
+<span class="tracking-widest">CIPHER SWITCHES:</span>
+<div class="flex items-center gap-3 bg-surface-container-lowest px-3 py-1 border border-outline-variant">
+<div class="flex items-center gap-1">
+<span class="w-1.5 h-3 bg-primary-container rounded-[1px]"></span>
+<span class="text-primary">1</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="w-1.5 h-3 bg-primary-container rounded-[1px]"></span>
+<span class="text-primary">1</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="w-1.5 h-3 bg-outline-variant rounded-[1px]"></span>
+<span class="text-outline">0</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="w-1.5 h-3 bg-primary-container rounded-[1px]"></span>
+<span class="text-primary">1</span>
+</div>
+</div>
+<span class="text-secondary-container font-mono tracking-widest">[BUS: SYNC]</span>
+</div>
+<!-- Action Buttons Area -->
+<div class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+<!-- Primary CTA -->
+<button    id="startBtn" class="relative group overflow-hidden border-2 border-primary-container bg-primary-container/10 hover:bg-primary-container hover:text-surface-container-lowest text-primary-container font-headline-sm text-headline-sm font-bold uppercase py-3.5 px-4 transition-all duration-200 flex items-center justify-center gap-2 active:scale-95 shadow-[0_0_14px_rgba(57,255,20,0.35)]" type="button">
+<span class="material-symbols-outlined group-hover:text-surface-container-lowest" data-icon="terminal">terminal</span>
+<span class="tracking-wider">[ START MISSION ]</span>
+</button>
+<!-- Secondary CTA: RFID Card -->
+<button class="relative group border border-secondary-container bg-surface-container-high/80 hover:bg-secondary-container/20 text-secondary-container font-headline-sm text-headline-sm font-semibold uppercase py-3.5 px-4 transition-all duration-200 flex items-center justify-center gap-2 active:scale-95 shadow-[0_0_12px_rgba(0,229,255,0.2)]" type="button">
+<span class="relative flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary-container" data-icon="receipt_long">receipt_long</span>
+<span class="absolute w-6 h-6 rounded-full border border-secondary-container nfc-pulse pointer-events-none"></span>
+</span>
+<span class="tracking-wider text-label-lg font-label-lg">[ TAP RFID CARD ]</span>
+</button>
+</div>
+</section>
+<!-- Bottom Telemetry Status Deck -->
+<footer class="mt-6 border border-outline-variant bg-surface-container-lowest/90 px-4 py-2.5 flex flex-col md:flex-row items-center justify-between text-body-sm font-body-sm text-on-surface-variant gap-2 backdrop-blur-sm">
+<div class="flex items-center gap-3">
+<span class="inline-flex items-center gap-1 text-primary-container">
+<span class="material-symbols-outlined text-base" data-icon="lock_open">lock_open</span>
+<span>LINK: STANDBY</span>
+</span>
+<span class="text-outline">|</span>
+<span>ENCRYPTION: 4096-BIT RSA</span>
+<span class="text-outline">|</span>
+<span class="text-secondary-container">TTL 3.3V</span>
+</div>
+<div class="text-label-sm font-label-sm text-outline tracking-widest uppercase">
+        SYS.REL 1.0.4 - FOR AUTHORIZED FIELD OPERATIVES ONLY
+      </div>
+</footer>
+</main>
+<!-- BOTTOM NAVIGATION SHELL (Persistent Shell Component) -->
+<aside class="relative z-30 w-full">
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center px-2 bg-surface-container-lowest border-t border-outline-variant">
+<!-- DECK (Active Navigation item mapped to current splash/deck boot stage) -->
+<button class="flex flex-col items-center justify-center text-primary-container dark:text-primary-container font-bold border-t-2 border-primary-container p-2 active:scale-95 transition-transform duration-75" type="button">
+<span class="material-symbols-outlined" data-icon="memory">memory</span>
+<span class="text-label-sm font-label-sm">DECK</span>
+</button>
+<!-- DOSSIER -->
+<button class="flex flex-col items-center justify-center text-outline dark:text-outline p-2 hover:text-secondary hover:bg-surface-container-low transition-colors duration-150 active:scale-95" type="button">
+<span class="material-symbols-outlined" data-icon="folder_open">folder_open</span>
+<span class="text-label-sm font-label-sm">DOSSIER</span>
+</button>
+<!-- LOGS -->
+<button class="flex flex-col items-center justify-center text-outline dark:text-outline p-2 hover:text-secondary hover:bg-surface-container-low transition-colors duration-150 active:scale-95" type="button">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+<span class="text-label-sm font-label-sm">LOGS</span>
+</button>
+<!-- DECRYPT -->
+<button class="flex flex-col items-center justify-center text-outline dark:text-outline p-2 hover:text-secondary hover:bg-surface-container-low transition-colors duration-150 active:scale-95" type="button">
+<span class="material-symbols-outlined" data-icon="lock_open">lock_open</span>
+<span class="text-label-sm font-label-sm">DECRYPT</span>
+</button>
+</nav>
+</aside>
+<!-- Inline Rain Animation & Lightweight Terminal HUD Logic -->
+<script>
+    // Matrix Rain Effect (0s and 1s cyber stream)
+    const canvas = document.getElementById('matrixCanvas');
+    const ctx = canvas.getContext('2d');
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    const chars = '01';
+    const fontSize = 14;
+    let columns = Math.floor(canvas.width / fontSize);
+    let drops = Array(columns).fill(1);
+
+    function drawMatrix() {
+      ctx.fillStyle = 'rgba(10, 14, 20, 0.08)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = '#39ff14';
+      ctx.font = fontSize + 'px "JetBrains Mono", monospace';
+
+      for (let i = 0; i < drops.length; i++) {
+        const text = chars.charAt(Math.floor(Math.random() * chars.length));
+        ctx.fillStyle = (Math.random() > 0.85) ? '#00e3fd' : '#39ff14';
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+        drops[i]++;
+      }
+    }
+    setInterval(drawMatrix, 45);
+
+    // Live Clock Update
+    function updateClock() {
+      const clockEl = document.getElementById('terminalClock');
+      if (clockEl) {
+        const now = new Date();
+        const y = now.getUTCFullYear();
+        const m = String(now.getUTCMonth() + 1).padStart(2, '0');
+        const d = String(now.getUTCDate()).padStart(2, '0');
+        const h = String(now.getUTCHours()).padStart(2, '0');
+        const min = String(now.getUTCMinutes()).padStart(2, '0');
+        const s = String(now.getUTCSeconds()).padStart(2, '0');
+        clockEl.textContent = `${y}-${m}-${d} ${h}:${min}:${s} UTC`;
+      }
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+  </script>
+   <script src="/js/heist-api.js"></script>
+   <script>
+     document.getElementById('startBtn').addEventListener('click', async () => {
+       try {
+         const name = document.getElementById('agentIdInput').value;
+         const player = await Heist.login(name);
+         location.href = '/case-select.html';
+       } catch (e) {
+         alert(e.message);
+       }
+     });
+   </script>
+</body></html>
