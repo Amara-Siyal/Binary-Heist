@@ -12,7 +12,8 @@ const Heist = (() => {
   const load = (k) => JSON.parse(sessionStorage.getItem(k) || 'null');
 
   return {
-    login: async (agent_name, rfid_uid) => { const p = await j('POST', '/api/login', { agent_name, rfid_uid }); save('player', p); return p; },
+    login: async (agent_name, password) => { const p = await j('POST', '/api/login', { agent_name, password }); save('player', p); return p; },
+    signup: async (agent_name, password) => { const p = await j('POST', '/api/signup', { agent_name, password }); save('player', p); return p; },
     player: () => load('player'),
     cases: () => j('GET', '/api/cases'),
     dailyCase: () => j('GET', '/api/cases/daily'),

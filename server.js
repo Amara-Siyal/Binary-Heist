@@ -2,6 +2,19 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const db = require('./db');
+const crypto = require('crypto');
+
+function hashPassword(pw) {
+  const salt = crypto.randomBytes(16).toString('hex');
+  return `${salt}:${crypto.scryptSync(pw, salt, 64).toString('hex')}`;
+}
+function verifyPassword(pw, stored) {
+  if (!stored) return false;
+  const [salt, hash] = stored.split(':');
+  const a = Buffer.from(hash, 'hex');
+  const b = crypto.scryptSync(pw, salt, 64);
+  return a.length === b.length && crypto.timingSafeEqual(a, b);
+}
 const { generate } = require('./puzzles');
 
 const IS_PROD = process.env.NODE_ENV === 'production' || !!process.env.VERCEL;
@@ -214,26 +227,30 @@ async function playerProfile(id) {
   const solved = (await db.get(`SELECT COUNT(*) c FROM game_sessions WHERE player_id=? AND result='win'`, [id])).c;
   return { ...p, next_rank_xp: next ? next[0] : null, cases_solved: solved };
 }
+const cleanName = (n) => String(n || '').trim().replace(/_+$/, '');
 
-app.post('/api/login', ah(async (req, res) => {
-  const { agent_name, rfid_uid } = req.body || {};
-  let p = null;
-  if (rfid_uid) p = await db.get('SELECT * FROM players WHERE rfid_uid=?', [String(rfid_uid)]);
-  if (!p && agent_name) {
-    const name = String(agent_name).trim().replace(/_+$/, '');
-    if (!/^[A-Za-z0-9_]{3,40}$/.test(name)) return res.status(400).json({ error: 'Agent ID must be 3-40 letters, digits or underscores' });
-    p = await db.get('SELECT * FROM players WHERE agent_name=?', [name]);
-    if (!p) {
-      const r = await db.run('INSERT INTO players (agent_name, rfid_uid) VALUES (?,?)', [name, rfid_uid ? String(rfid_uid) : null]);
-      p = await db.get('SELECT * FROM players WHERE player_id=?', [r.lastInsertRowid]);
-    } else if (rfid_uid && !p.rfid_uid) {
-      await db.run('UPDATE players SET rfid_uid=? WHERE player_id=?', [String(rfid_uid), p.player_id]);
-    }
-  }
-  if (!p) return res.status(404).json({ error: 'Unknown card. Enter an Agent ID once to register it.' });
-  res.json(await playerProfile(p.player_id));
+app.post('/api/signup', ah(async (req, res) => {
+  const { agent_name, password } = req.body || {};
+  const name = cleanName(agent_name);
+  if (!/^[A-Za-z0-9_]{3,40}$/.test(name)) return res.status(400).json({ error: 'Agent ID must be 3-40 letters, digits or underscores' });
+  if (typeof password !== 'string' || password.length < 6 || password.length > 100) return res.status(400).json({ error: 'Password must be 6-100 characters' });
+  if (await db.get('SELECT player_id FROM players WHERE agent_name=?', [name])) return res.status(409).json({ error: 'This Agent ID is already taken' });
+  const r = await db.run('INSERT INTO players (agent_name, password_hash) VALUES (?,?)', [name, hashPassword(password)]);
+  res.status(201).json(await playerProfile(r.lastInsertRowid));
 }));
 
+app.post('/api/login', ah(async (req, res) => {
+  const { agent_name, password, rfid_uid } = req.body || {};
+  if (rfid_uid) {
+    const c = await db.get('SELECT player_id FROM players WHERE rfid_uid=?', [String(rfid_uid)]);
+    if (c) return res.json(await playerProfile(c.player_id));
+  }
+  const p = await db.get('SELECT * FROM players WHERE agent_name=?', [cleanName(agent_name)]);
+  if (!p || typeof password !== 'string' || !verifyPassword(password, p.password_hash)) {
+    return res.status(401).json({ error: 'Wrong Agent ID or password' });
+  }
+  res.json(await playerProfile(p.player_id));
+}));
 app.get('/api/players/:id', ah(async (req, res) => {
   const p = await playerProfile(+req.params.id);
   p ? res.json(p) : res.status(404).json({ error: 'not found' });

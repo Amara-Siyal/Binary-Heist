@@ -348,8 +348,17 @@
 <!-- Terminal Input Display Field -->
 <div class="relative bg-surface-container-lowest border border-primary-container/80 p-3 flex items-center shadow-[inset_0_0_10px_rgba(57,255,20,0.15)] group">
 <span class="text-primary-container font-headline-md text-headline-md select-none mr-2">&gt;</span>
-<input class="bg-transparent text-primary font-body-lg text-body-lg w-full focus:outline-none tracking-widest uppercase font-semibold border-none p-0 focus:ring-0" id="agentIdInput" spellcheck="false" type="text" value="AGENT_7709_">
+<input class="bg-transparent text-primary font-body-lg text-body-lg w-full focus:outline-none tracking-widest uppercase font-semibold border-none p-0 focus:ring-0" id="agentIdInput" spellcheck="false" type="text" value="" placeholder="AGENT_ID" autocomplete="username">
 <span class="text-primary-container text-headline-md font-headline-md cursor-blink select-none">▋</span>
+</div>
+<div class="relative mt-3 bg-surface-container-lowest border border-primary-container/80 p-3 flex items-center shadow-[inset_0_0_10px_rgba(57,255,20,0.15)]">
+<span class="text-primary-container font-headline-md text-headline-md select-none mr-2">*</span>
+<input class="bg-transparent text-primary font-body-lg text-body-lg w-full focus:outline-none tracking-widest font-semibold border-none p-0 focus:ring-0" id="passwordInput" type="password" placeholder="PASSWORD" autocomplete="current-password">
+</div>
+<p id="authMsg" class="mt-2 text-label-sm text-error min-h-[1rem]"></p>
+<div class="mt-1 text-label-sm text-on-surface-variant">
+<span id="modeText">NEW AGENT?</span>
+<button id="modeToggle" type="button" class="text-secondary-container underline">CREATE ACCOUNT</button>
 </div>
 <!-- Physical DIP Switch Bank Metaphor -->
 <div class="mt-4 pt-3 border-t border-outline-variant/60 flex items-center justify-between text-label-sm font-label-sm text-on-surface-variant">
@@ -379,7 +388,7 @@
 <!-- Primary CTA -->
 <button    id="startBtn" class="relative group overflow-hidden border-2 border-primary-container bg-primary-container/10 hover:bg-primary-container hover:text-surface-container-lowest text-primary-container font-headline-sm text-headline-sm font-bold uppercase py-3.5 px-4 transition-all duration-200 flex items-center justify-center gap-2 active:scale-95 shadow-[0_0_14px_rgba(57,255,20,0.35)]" type="button">
 <span class="material-symbols-outlined group-hover:text-surface-container-lowest" data-icon="terminal">terminal</span>
-<span class="tracking-wider">[ START MISSION ]</span>
+<span id="startLabel" class="tracking-wider">[ LOGIN ]</span>
 </button>
 <!-- Secondary CTA: RFID Card -->
 <button class="relative group border border-secondary-container bg-surface-container-high/80 hover:bg-secondary-container/20 text-secondary-container font-headline-sm text-headline-sm font-semibold uppercase py-3.5 px-4 transition-all duration-200 flex items-center justify-center gap-2 active:scale-95 shadow-[0_0_12px_rgba(0,229,255,0.2)]" type="button">
@@ -489,15 +498,33 @@
     updateClock();
   </script>
    <script src="/js/heist-api.js"></script>
-   <script>
-     document.getElementById('startBtn').addEventListener('click', async () => {
-       try {
-         const name = document.getElementById('agentIdInput').value;
-         const player = await Heist.login(name);
-         location.href = '/case-select.html';
-       } catch (e) {
-         alert(e.message);
-       }
-     });
-   </script>
+  <script>
+  let mode = 'login';
+  const $ = (id) => document.getElementById(id);
+
+  $('modeToggle').addEventListener('click', () => {
+    mode = mode === 'login' ? 'signup' : 'login';
+    $('startLabel').textContent = mode === 'login' ? '[ LOGIN ]' : '[ CREATE ACCOUNT ]';
+    $('modeText').textContent = mode === 'login' ? 'NEW AGENT?' : 'ALREADY REGISTERED?';
+    $('modeToggle').textContent = mode === 'login' ? 'CREATE ACCOUNT' : 'LOGIN';
+    $('passwordInput').autocomplete = mode === 'login' ? 'current-password' : 'new-password';
+    $('authMsg').textContent = '';
+  });
+
+  async function submitAuth() {
+    $('authMsg').textContent = '';
+    try {
+      const name = $('agentIdInput').value.trim();
+      const pw = $('passwordInput').value;
+      if (!name || !pw) throw new Error('Enter Agent ID and password');
+      if (mode === 'signup') await Heist.signup(name, pw);
+      else await Heist.login(name, pw);
+      location.href = '/case-select.html';
+    } catch (e) {
+      $('authMsg').textContent = e.message;
+    }
+  }
+  $('startBtn').addEventListener('click', submitAuth);
+  $('passwordInput').addEventListener('keydown', (e) => { if (e.key === 'Enter') submitAuth(); });
+</script>
 </body></html>

@@ -53,6 +53,9 @@ function init() {
         fs.readFileSync(path.join(__dirname, 'schema.sql'), 'utf8') + '\n' +
         fs.readFileSync(path.join(__dirname, 'seed.sql'), 'utf8')
       )
+      // existing databases already have the players table, so add the new column separately
+      .then(() => client.execute('ALTER TABLE players ADD COLUMN password_hash TEXT')
+        .catch((e) => { if (!/duplicate column/i.test(String(e.message))) throw e; }))
       .catch((e) => { ready = null; throw e; });
   }
   return ready;
